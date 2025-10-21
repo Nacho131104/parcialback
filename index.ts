@@ -33,12 +33,41 @@ app.get("/ld",(req,res)=>{
 
 app.get("/id/:id",(req,res)=>{
     const id = req.params.id
-    if(!id) return res.status(400).send("Error, se necesita un id")
+    if(id == undefined) return res.status(400).send("Error, se necesita un id")
 
     const disco = LDS.filter((disc)=> disc.id.toString() === id)
     if(!disco) return res.status(404).send("Error, dispositivo no encontrado")
 
     return res.status(200).json(disco)
+})
+
+app.post("/ld",(req,res)=>{
+    const {filmName,rotationType,region,lenghtMinutes,videoFomart} = req.body
+
+    //al añadir uno siempre tendra el id del tamaño +1
+    const nuevoId = LDS.length +1 
+
+    //hay que tener todos los parametros para poder añadir un ld
+    if(!filmName || !rotationType || !region || !lenghtMinutes || !videoFomart){
+        return res.status(400).send("Error, se necesitan todos los parametros")
+    }
+
+    //los tipos rotationType y videoFormat solo tienen dos opciones
+    if(rotationType.toUpperCase() != "CAV" && rotationType.toUpperCase() != "CLV"){
+        return res.status(404).send("Error, tipo de rotationType no disponible")
+    }
+    if(videoFomart.toUpperCase() !="NTSC" && videoFomart.toUpperCase() !="PAL"){
+        return res.status(404).send("Error,tipo de videoFormat no disponible")
+    }
+
+    const nuevoLd = {
+        id:nuevoId,
+        ...req.body
+    }
+
+    LDS.push(nuevoLd)
+    return res.status(200).json(nuevoLd)
+
 })
 
 app.listen(puerto, () => {
