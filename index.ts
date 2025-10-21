@@ -1,6 +1,10 @@
 import cors from "cors"
 import express from "express"
 
+
+
+
+//Primera Parte
 const app = express()
 const puerto = 3000
 
@@ -33,10 +37,10 @@ app.get("/ld",(req,res)=>{
 
 app.get("/id/:id",(req,res)=>{
     const id = req.params.id
-    if(id == undefined) return res.status(400).send("Error, se necesita un id")
+    if(id == undefined) {return res.status(400).send("Error, se necesita un id")}
 
     const disco = LDS.filter((disc)=> disc.id.toString() === id)
-    if(!disco) return res.status(404).send("Error, dispositivo no encontrado")
+    if(!disco) {return res.status(404).send("Error, dispositivo no encontrado")}
 
     return res.status(200).json(disco)
 })
@@ -70,6 +74,22 @@ app.post("/ld",(req,res)=>{
 
 })
 
+app.delete("/ld/:id",(req,res)=>{
+    const id = req.params.id
+    if(id == undefined) {return res.status(404).send("Error, id no especificado")}
+    
+    const ld = LDS.filter((disc)=> disc.id.toString() == id)
+
+    if(!ld) {return res.status(404).send("Error, Dispositivo no encontrado")}
+    
+    LDS = LDS.filter((disc)=> disc.id.toString() != id)
+    return res.status(200).send("Ok,LD eliminado")
+    
+})
 app.listen(puerto, () => {
     console.log("Server started at port " + puerto)
 })
+
+
+
+//Segunda parte
