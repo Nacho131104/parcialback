@@ -1,6 +1,6 @@
 import cors from "cors"
 import express from "express"
-
+import axios from "axios"
 
 
 
@@ -86,10 +86,58 @@ app.delete("/ld/:id",(req,res)=>{
     return res.status(200).send("Ok,LD eliminado")
     
 })
+
+
 app.listen(puerto, () => {
     console.log("Server started at port " + puerto)
 })
 
 
 
+const mostrarLDs =async(url:string)=>{
+    const response = (await axios.get(url)).data
+    //los muestro por pantalla
+     return Promise.all(response)
+}
 //Segunda parte
+
+const testApi = async()=>{
+    //sacamos todos los lds
+    
+    const lds = await mostrarLDs("http://localhost:3000/ld")
+    console.log(lds)
+
+    /*
+    //creo un nuevo ld
+    const ld = {
+        filmName:"Quinta",
+        rotationType: "CAL",
+        region:"Madrid",
+        lenghtMinutes:12,
+        videoFomart:"PAL"
+    }
+    
+    const response2 = await axios.post(`https://localhost:3000/ld/${ld}`)
+    */
+
+
+    //mostrar el nuevo ld
+
+    const ultimoId = LDS.at(LDS.length -1)?.id
+    const mostrarLd = (await axios.get(`http://localhost:3000/id/${ultimoId}`)).data
+    console.log(mostrarLd)
+
+
+    /*
+    //borro ese ld
+    const borrarLd = (await axios.delete(`https://localhost:3000/ld/${ultimoId}`)).data
+    console.log(borrarLd)
+
+    //mostrar Lista final
+    const lds2 = await mostrarLDs("http://localhost:3000/ld")
+    console.log(lds2)
+    */
+}
+
+
+testApi()
